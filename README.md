@@ -8,7 +8,18 @@ Say **"Hey Jarvis"**, hold a real interruptible conversation with OpenAI's Realt
 tools, and watch it render answers as native cards on the screen. The wake word runs on-device, so
 nothing streams to the cloud until you actually address it.
 
-**▶ [Watch the demo](https://youtube.com/shorts/ax9ee9M-XW8?feature=share)**
+<p align="center">
+  <img src="docs/images/jarvis-listening.jpg" alt="Jarvis listening on a Lenovo ThinkSmart View" width="700">
+</p>
+
+<p align="center"><b>▶ <a href="https://youtube.com/shorts/ax9ee9M-XW8?feature=share">Watch the 40-second demo</a></b></p>
+
+Wake word → live conversation → a web search it decides to run on its own, all on a panel that
+shipped in 2019 and was never meant to do any of it:
+
+<p align="center">
+  <img src="docs/images/jarvis-conversation.jpg" alt="Jarvis answering a question after searching the web" width="700">
+</p>
 
 ---
 
