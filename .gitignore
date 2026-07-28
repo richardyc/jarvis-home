@@ -1,0 +1,43 @@
+# ---- secrets — never commit ----------------------------------------------------
+# API keys (see secrets.properties.example)
+secrets.properties
+# Runtime config: holds your WiFi SSID + password (see config.example.yaml)
+app/src/main/assets/config.yaml
+*.key
+*.pem
+*.jks
+*.keystore
+.openai_key
+
+# ---- local machine paths -------------------------------------------------------
+local.properties
+
+# ---- android / gradle build ----------------------------------------------------
+.gradle/
+build/
+.cxx/
+*.apk
+*.aab
+captures/
+
+# ---- local toolchain (huge, machine-specific; see docs/hardware-setup.md) ------
+# Leading slash matters: a bare "tools/" would also swallow app/src/.../jarvis/tools/
+/tools/
+
+# ---- device data & vendor firmware ---------------------------------------------
+# Proprietary Lenovo images and device-unique NVRAM/calibration dumps. These are
+# kept outside the repo entirely (../jarvis-home-vault) — never add them back.
+/firmware/
+/backups/
+*.img
+*.bin.debug-orig
+*.mov
+
+# ---- ide -----------------------------------------------------------------------
+.idea/
+*.iml
+.vscode/
+
+# ---- os ------------------------------------------------------------------------
+.DS_Store
+Thumbs.db

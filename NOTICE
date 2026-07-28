@@ -1,0 +1,62 @@
+Jarvis Home
+Copyright (c) 2026 Richard He
+Licensed under the MIT License (see LICENSE).
+
+This project bundles or depends on the following third-party components.
+
+--------------------------------------------------------------------------------
+WebRTC Audio Processing (AEC3)
+  Files:    app/src/main/jniLibs/armeabi-v7a/libwebrtc-audio-processing-1.so
+            app/src/main/cpp/include/webrtc_audio_processing/**
+  License:  BSD 3-Clause
+  Source:   https://webrtc.googlesource.com/src
+            https://gitlab.freedesktop.org/pulseaudio/webrtc-audio-processing
+  Notes:    Prebuilt for armeabi-v7a. The device is 32-bit and Android 8.1, which
+            makes building this in-tree impractical; the binary is shipped for
+            reproducibility. Rebuild from upstream if you prefer.
+
+--------------------------------------------------------------------------------
+Abseil (absl)
+  Files:    app/src/main/cpp/include/absl/**
+  License:  Apache License 2.0
+  Source:   https://github.com/abseil/abseil-cpp
+  Notes:    Headers only, required to compile against the WebRTC APM headers.
+
+--------------------------------------------------------------------------------
+openWakeWord
+  Files:    app/src/main/assets/oww/melspectrogram.onnx
+            app/src/main/assets/oww/embedding_model.onnx
+            app/src/main/assets/oww/hey_jarvis_v0.1.onnx
+  License:  Apache License 2.0
+  Source:   https://github.com/dscripka/openWakeWord
+  Notes:    Pretrained "hey jarvis" model and its shared feature extractors,
+            redistributed unmodified.
+
+--------------------------------------------------------------------------------
+Roboto
+  Files:    app/src/main/res/font/app_regular.ttf
+            app/src/main/res/font/app_medium.ttf
+  License:  Apache License 2.0
+  Source:   https://github.com/googlefonts/roboto
+  Copyright: Copyright 2011 Google Inc. All Rights Reserved.
+
+--------------------------------------------------------------------------------
+ONNX Runtime (Android)      Apache-2.0   https://github.com/microsoft/onnxruntime
+OkHttp                      Apache-2.0   https://github.com/square/okhttp
+AndroidX / Jetpack Compose  Apache-2.0   https://developer.android.com/jetpack
+  Notes:    Resolved by Gradle at build time; not vendored in this repository.
+
+--------------------------------------------------------------------------------
+Hardware initialization data
+  Files:    app/src/main/assets/hw/*.bin
+  Notes:    Register/value sequences for the TI TLV320 ADC and TAS5805M amplifier,
+            recovered by observing the device's own retail firmware bring-up.
+            These are short factual configuration tables, not vendor code. No
+            Lenovo, MediaTek, or Qualcomm firmware, binaries, or images are
+            included in this repository.
+
+--------------------------------------------------------------------------------
+Device documentation
+  The hardware unlocking procedures summarized in docs/hardware-setup.md were
+  worked out by the XDA community. Credit and links are given in that file; the
+  original posts are not reproduced here.

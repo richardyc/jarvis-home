@@ -1,0 +1,61 @@
+# Jarvis runtime config — copy to `config.yaml` (same directory) and edit.
+# `config.yaml` is gitignored; it holds your WiFi password, so keep it that way.
+# Format is a deliberately dumb flat `key: value` parser (see Config.kt) — no nesting, no lists.
+# Every key is optional; anything missing falls back to the default shown in Config.kt.
+
+model: gpt-realtime-2.1-mini
+voice: verse
+vad_silence_ms: 600
+
+# Session lifetime. A session ends after idle_timeout_ms of nobody speaking — the socket closes,
+# the mic is released, and the conversation history is dropped, so the next "Hey Jarvis" starts a
+# genuinely fresh conversation. Long enough to think for a moment and ask a follow-up without
+# repeating the wake word, short enough that walking away resets things.
+max_session_ms: 600000     # HARD cap: 10 min, session force-closes no matter what
+idle_timeout_ms: 15000     # follow-up window: 15s after the last real turn, then wake word required
+
+mic_enabled: true
+# Fixed upstream gain, applied while the speaker is quiet (x1 during playback). The comm-path
+# capture is ~11x quieter than the raw route; x6 restores VAD-visible levels and can never clip
+# (raw speech peaks ~4000). Verified end-to-end against the Realtime API in the VAD harness.
+mic_gain: 6
+animate: true
+
+# wake word ("Hey Jarvis") — openWakeWord on-device
+wake_word: true
+wake_threshold: 0.5
+
+# ---------------------------------------------------------------------------------------------
+# WiFi. The app self-connects on boot so the panel needs no manual setup after a flash.
+# Leave all three blank to just use whatever network Android is already joined to.
+#
+# Hard-won notes from the MediaTek MT7668 panel, kept because they generalize:
+#
+#   * Do NOT pin a BSSID. A WifiConfiguration BSSID lock fails outright on that chipset — the
+#     panel can't associate at all (stuck SCANNING), and the config churn needed to set/clear the
+#     pin is itself what wedges the framework. Leave wifi_bssid empty; roaming stays enabled and
+#     the session rides out link blips via reconnect backoff instead.
+#
+#   * Prefer a 5GHz-only SSID on a fixed NON-DFS channel (e.g. ch44 @40MHz). DFS channels
+#     (52-64, 100-144) force the radio silent on radar detection, which cuts the assistant off
+#     mid-sentence. The app warns on screen if it ever lands on one. A dual-band SSID is worse
+#     than useless here: band-bounce roaming between same-SSID BSSIDs drops the audio stream.
+#
+#   * A congested 2.4GHz band is unusable for realtime audio — measured 77-250ms to the AP with
+#     1.6s stalls against ~1.4ms on a clean 5GHz channel.
+#
+#   * The framework's default 5-minute full off-channel scan fires an ANQP/Passpoint storm at
+#     every neighbor AP (~2s off-channel per query) and stalls audio. Push it out to hourly:
+#       adb shell settings put global wifi_framework_scan_interval_ms 3600000
+#
+#   * Leave A-MPDU aggregation ON. Retail ships it off; copying that looks fine on idle pings but
+#     collapses under real load (2.5KB/s, 23-45% loss). Always test WiFi under load — idle pings
+#     lie. NOTE: never write to /proc/net/wlan/cfg on the MT7668 driver — it kernel-panics.
+wifi_ssid:
+wifi_pass:
+wifi_bssid:
+
+instructions: "You are Jarvis, a warm and concise AI assistant living on a smart display. Keep spoken replies to ONE or TWO short sentences unless the user explicitly asks for more detail — brevity matters, do not ramble. Only respond to someone clearly speaking to you — ignore background TV, music, and ambient chatter, and do not reply to it. Call web_search whenever the answer depends on current or changeable information (news, weather beyond the weather tool, sports, prices, opening hours, recent events) or when you simply don't know — never guess at such facts. When you call web_search, say a brief phrase like 'One moment.' in the same turn so the user knows you're looking it up, then summarize what you found in one or two spoken sentences. When the user says 'stop', 'stop listening', 'that's all', 'that's enough', 'never mind', 'goodbye', or otherwise signals they're done, immediately call the end_conversation function to stop listening."
+
+# where "outside"/"near me" points — injected into the system prompt
+home_city: "San Francisco, California"
